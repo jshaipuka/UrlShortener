@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,17 +18,16 @@ namespace UrlShortener
         {
             this.Config = configuration;
         }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddSwaggerGen(c =>c.SwaggerDoc("v1", new OpenApiInfo {Title = "UrlShortener", Version = "v1"}));
             services.AddCors(options => options.AddPolicy("cors:AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            services.AddHttpClient<KeygenService>(c => c.BaseAddress = new Uri(Config.GetSection("KeygenService").GetSection("Url").Value));
             services.AddSingleton<IShortUrlRepository>(InitializeShortUrlRepository().GetAwaiter().GetResult());
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -49,8 +49,7 @@ namespace UrlShortener
         private async Task<ShortUrlRepository> InitializeShortUrlRepository()
         {
             Container container = await InitializeCosmosDbContainer();
-            ShortUrlRepository shortUrlRepository = new ShortUrlRepository(container);
-            return shortUrlRepository;
+            return new ShortUrlRepository(container);
         }
 
         private async Task<Container> InitializeCosmosDbContainer()

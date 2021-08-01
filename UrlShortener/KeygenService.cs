@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace UrlShortener
 {
     public class KeygenService : IKeygenService
     {
-        public async Task<string> AllocateKey()
+        public HttpClient Client { get; }
+
+        public KeygenService(HttpClient client)
         {
-            // TODO: write code.
-            return "key from service";
+            Client = client;
         }
+
+        public async Task<string> AllocateKey() => (await Client.GetFromJsonAsync<IList<string>>("/keys?limit=5"))!.First();
 
         public async Task ReleaseKey(string key)
         {

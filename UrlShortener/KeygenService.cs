@@ -5,12 +5,13 @@ namespace UrlShortener
 {
     public class KeygenService : IKeygenService
     {
-        public Task<string> AllocateKey()
+        public async Task<string> AllocateKey()
         {
-            throw new System.NotImplementedException();
+            // TODO: write code.
+            return "key from service";
         }
 
-        public Task ReleaseKey(string key)
+        public async Task ReleaseKey(string key)
         {
             try
             {

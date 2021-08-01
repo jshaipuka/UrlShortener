@@ -6,11 +6,11 @@ namespace UrlShortener
 {
     public class ShortUrlRepository : IShortUrlRepository
     {
-        private Container _container;
+        private readonly Container _container;
 
-        public ShortUrlRepository(CosmosClient db, string dbName, string containerName)
+        public ShortUrlRepository(Container container)
         {
-            _container = db.GetContainer(dbName, containerName);
+            this._container = container;
         }
 
         public async Task<ShortUrlEntity> GetById(string id)

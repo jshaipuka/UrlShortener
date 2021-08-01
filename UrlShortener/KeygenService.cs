@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace UrlShortener
 {
-    public class KeygenService : IKeygenService
+    public class KeygenService
     {
-        public HttpClient Client { get; }
+        private readonly HttpClient _client;
 
         public KeygenService(HttpClient client)
         {
-            Client = client;
+            _client = client;
         }
 
-        public async Task<string> AllocateKey() => (await Client.GetFromJsonAsync<IList<string>>("/keys?limit=5"))!.First();
+        public async Task<string> AllocateKey() => (await _client.GetFromJsonAsync<IList<string>>("/api/v1/keys?limit=1"))!.First();
 
         public async Task ReleaseKey(string key)
         {

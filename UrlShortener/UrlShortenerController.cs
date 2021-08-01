@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace UrlShortener
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1")]
     public class UrlShortenerController : ControllerBase
     {
         private readonly IShortUrlRepository _repository;
-        private readonly IKeygenService _keygenService;
+        private readonly KeygenService _keygenService;
 
-        public UrlShortenerController(IShortUrlRepository repository, IKeygenService keygenService)
+        public UrlShortenerController(IShortUrlRepository repository, KeygenService keygenService)
         {
             _repository = repository;
             _keygenService = keygenService;
@@ -39,7 +39,7 @@ namespace UrlShortener
             var allocatedKey = await GetAllocatedKey(shortUrl.Alias);
             if (string.IsNullOrEmpty(allocatedKey)) return BadRequest("Cannot create short URL. Key is taken.");
             
-            var newShortUrl = new ShortUrlEntity { Id = allocatedKey, OriginalUrl = "Original URL", ExpiresAt = shortUrl.ExpiresAt ?? DateTime.UtcNow.AddYears(2) };
+            var newShortUrl = new ShortUrlEntity { Id = allocatedKey, OriginalUrl = shortUrl.OriginalUrl, ExpiresAt = shortUrl.ExpiresAt ?? DateTime.UtcNow.AddYears(2) };
             await _repository.Create(newShortUrl);
             return Ok(newShortUrl);
         }

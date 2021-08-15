@@ -19,6 +19,7 @@ namespace UrlShortener
 
         public IConfiguration Config { get; }
 
+        // Init Swagger, HttpClient and others
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();

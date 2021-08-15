@@ -8,8 +8,8 @@ namespace UrlShortener
     [Route("api/v1")]
     public class UrlShortenerController : ControllerBase
     {
-        private readonly IShortUrlRepository _repository;
         private readonly KeygenService _keygenService;
+        private readonly IShortUrlRepository _repository;
 
         public UrlShortenerController(IShortUrlRepository repository, KeygenService keygenService)
         {
@@ -32,14 +32,18 @@ namespace UrlShortener
 
             return Ok(shortUrl.OriginalUrl);
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> CreateUrl([FromBody]ShortUrl shortUrl)
+        public async Task<IActionResult> CreateUrl([FromBody] ShortUrl shortUrl)
         {
             var allocatedKey = await GetAllocatedKey(shortUrl.Alias);
             if (string.IsNullOrEmpty(allocatedKey)) return BadRequest("Cannot create short URL. Key is taken.");
-            
-            var newShortUrl = new ShortUrlEntity { Id = allocatedKey, OriginalUrl = shortUrl.OriginalUrl, ExpiresAt = shortUrl.ExpiresAt ?? DateTime.UtcNow.AddYears(2) };
+
+            var newShortUrl = new ShortUrlEntity
+            {
+                Id = allocatedKey, OriginalUrl = shortUrl.OriginalUrl,
+                ExpiresAt = shortUrl.ExpiresAt ?? DateTime.UtcNow.AddYears(2)
+            };
             await _repository.Create(newShortUrl);
             return Ok(newShortUrl);
         }
@@ -56,7 +60,7 @@ namespace UrlShortener
             await _keygenService.ReleaseKey(id);
             return Ok();
         }
-        
+
         private async Task<string> GetAllocatedKey(string? alias)
         {
             if (string.IsNullOrWhiteSpace(alias)) return await _keygenService.AllocateKey();

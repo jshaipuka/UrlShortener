@@ -16,7 +16,10 @@ namespace UrlShortener
             _client = client;
         }
 
-        public async Task<string> AllocateKey() => (await _client.GetFromJsonAsync<IList<string>>("/api/v1/keys?limit=1"))!.First();
+        public async Task<string> AllocateKey()
+        {
+            return (await _client.GetFromJsonAsync<IList<string>>("/api/v1/keys?limit=1"))!.First();
+        }
 
         public async Task ReleaseKey(string key)
         {

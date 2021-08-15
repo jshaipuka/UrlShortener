@@ -8,9 +8,7 @@ namespace UrlShortener
     {
         public string? Alias { get; set; }
 
-        [Required]
-        [DataType(Url)]
-        public string OriginalUrl { get; set; }
+        [Required] [DataType(Url)] public string OriginalUrl { get; set; }
 
         public DateTime? ExpiresAt { get; set; }
     }

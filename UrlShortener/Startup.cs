@@ -12,19 +12,21 @@ namespace UrlShortener
 {
     public class Startup
     {
-        public IConfiguration Config { get; }
-
         public Startup(IConfiguration configuration)
         {
-            this.Config = configuration;
+            Config = configuration;
         }
-        
+
+        public IConfiguration Config { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(c =>c.SwaggerDoc("v1", new OpenApiInfo {Title = "UrlShortener", Version = "v1"}));
-            services.AddCors(options => options.AddPolicy("cors:AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-            services.AddHttpClient<KeygenService>(c => c.BaseAddress = new Uri(Config.GetSection("KeygenService").GetSection("Url").Value));
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo {Title = "UrlShortener", Version = "v1"}));
+            services.AddCors(options => options.AddPolicy("cors:AllowAll",
+                policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            services.AddHttpClient<KeygenService>(c =>
+                c.BaseAddress = new Uri(Config.GetSection("KeygenService").GetSection("Url").Value));
             services.AddSingleton<IShortUrlRepository>(InitializeShortUrlRepository().GetAwaiter().GetResult());
         }
 
@@ -45,7 +47,7 @@ namespace UrlShortener
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
-        
+
         private async Task<ShortUrlRepository> InitializeShortUrlRepository()
         {
             Container container = await InitializeCosmosDbContainer();
@@ -58,13 +60,13 @@ namespace UrlShortener
 
             string account = dbConfig.GetSection("Account").Value;
             string key = dbConfig.GetSection("Key").Value;
-            CosmosClient client = new CosmosClient(account, key);
-            
+            CosmosClient client = new(account, key);
+
             string databaseName = dbConfig.GetSection("DatabaseName").Value;
             string containerName = dbConfig.GetSection("ContainerName").Value;
             DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
             await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
-            
+
             return client.GetContainer(databaseName, containerName);
         }
     }

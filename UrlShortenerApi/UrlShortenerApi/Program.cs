@@ -14,9 +14,13 @@ app
     .MapGet("/url/{urlHash}", (string urlHash) =>
     {
         var url = new ShortUrl() { UrlHash = urlHash, OriginalUrl = "https://google.com" };
-        return url.OriginalUrl;
+        
+        if (url == null) return Results.NotFound();
+        
+        return Results.Ok(url.OriginalUrl);
     })
     .Produces<string>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status404NotFound)
     .WithName("GetOriginalUrl")
     .WithTags("Getters");
 

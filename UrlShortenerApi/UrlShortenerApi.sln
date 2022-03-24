@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortenerApi", "UrlShortenerApi\UrlShortenerApi.csproj", "{F55D5C61-29F3-4DEC-8807-E1F324492682}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F55D5C61-29F3-4DEC-8807-E1F324492682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F55D5C61-29F3-4DEC-8807-E1F324492682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F55D5C61-29F3-4DEC-8807-E1F324492682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F55D5C61-29F3-4DEC-8807-E1F324492682}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
